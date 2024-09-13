@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+	<Resource 
+		name="chat/mysql"
+		auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="com.mysql.cj.jdbc.Driver"
+		url="jdbc:mysql://mysql.monorama.kr:3306/chat?characterEncoding=UTF-8&amp;serverTimezone=UTC&amp;autoReconnect=true "
+		username="chatt2r"
+		password="Qkslffk@91"
+		maxWaitMillis="20"
+		maxIdle="10"
+		maxWait="-1"
+	/>
+ </Context> 
