@@ -24,6 +24,10 @@
 		url 	= "http://moneyclub.monorama.kr:8080/webchat";
 		wsUrl	= "ws://moneyclub.monorama.kr:8080/webchat/chat/"+roomName;
 	}
+	
+	url		= "http://localhost:8080/webchat";
+	wsUrl	= "ws://localhost:8080/webchat/dial/"+roomName;	
+	
 %>
 <!DOCTYPE html>
 <html lang="utf-8">
@@ -51,8 +55,10 @@
 	webSocket.onmessage = function (event) {
 		// roomName:id:message
 		str = event.data;
-		// 메세지를 구분자로 나눔		
 		console.log(str);
+		/*
+		// 메세지를 구분자로 나눔		
+		
 		words = str.split(delim);
 		dailog = document.getElementById("dailog").innerHTML;
 		// id:message
@@ -63,7 +69,8 @@
 		}
 		
 		dailog+=words[1]+delim+words[2]+"<br>";
-		document.getElementById("dailog").innerHTML = dailog;
+		//*/
+		document.getElementById("dailog").innerHTML += str + "<br>";
 	};
 
 	
@@ -84,8 +91,8 @@
 </script>
 
 <body>
-user#1 : <a href='<%=url%>/index.jsp?mode=<%= mode == null ? "":mode%>&roomName=<%=roomName%>&id=박찬호'>입장하기</a>
-user#2 : <a href='<%=url%>/index.jsp?mode=<%= mode == null ? "":mode%>&roomName=<%=roomName%>&id=강간찬'>입장하기</a>
+user#1 : <a href='<%=url%>/index2.jsp?mode=<%= mode == null ? "":mode%>&roomName=<%=roomName%>&id=박찬호'>입장하기</a>
+user#2 : <a href='<%=url%>/index2.jsp?mode=<%= mode == null ? "":mode%>&roomName=<%=roomName%>&id=강간찬'>입장하기</a>
 	<div>
 		<input type="text" id="message" />
 		<button type="button" onclick="sendMessage()">send</button>

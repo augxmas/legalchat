@@ -25,6 +25,11 @@ if(mode == null){
 	url 	= "http://moneyclub.monorama.kr:8080/webchat";
 	wsUrl	= "ws://moneyclub.monorama.kr:8080/webchat/chat/";
 }
+
+url		= "http://localhost:8080/webchat";
+wsUrl	= "ws://localhost:8080/webchat/chat/";	
+
+
 %>
 <!DOCTYPE html>
 <html lang="utf-8">
@@ -84,8 +89,8 @@ if(mode == null){
 </script>
 
 <body>
-user#1 : <a href='<%=url%>/index.jsp?roomName=stock&id=박찬호'>입장하기</a>
-user#2 : <a href='<%=url%>/index.jsp?roomName=stock&id=강간찬'>입장하기</a>
+user#1 : <a href='<%=url%>/index.jsp?roomName=stock&mode=localhost&id=박찬호'>입장하기</a>
+user#2 : <a href='<%=url%>/index.jsp?roomName=stock&mode=localhost&id=강간찬'>입장하기</a>
 	<div>
 		<input type="text" id="message" />
 		<button type="button" onclick="sendMessage()">send</button>

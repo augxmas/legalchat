@@ -73,6 +73,7 @@ public class EchoEndpoint {
 				System.out.println(user+delim+msg+"/"+date);
 				session.getBasicRemote().sendText(chatRoom+delim+user+delim+msg);
 			}
+			
 			session.getBasicRemote().sendText(chatRoom+delim+" "+delim+date.replaceAll(":","."));
 		} catch (SQLException | NamingException | JDOMException | IOException e) {
 			// TODO Auto-generated catch block
