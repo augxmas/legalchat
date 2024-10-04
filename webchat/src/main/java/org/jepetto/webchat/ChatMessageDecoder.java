@@ -11,6 +11,7 @@ import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
 import org.jepetto.util.PropertyReader;
+import org.jepetto.util.Util;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -35,6 +36,9 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 	private EndpointConfig config;
 	
 	private static PropertyReader reader	= PropertyReader.getInstance();
+	
+	
+	private static final String repos 		= reader.getProperty("justia.repository");		
 	
 	/**
 	 * chatbot web server connection method = post
@@ -77,6 +81,10 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 	public static final String USERNAME		= "username";
 	public static final String REPLY		= "reply";
 	public static final String LOCALE		= "locale";
+	
+	public static final String FILENAME		= "fileName";
+	
+	public static final String FILE			= "file";
 		
 	/**
 	 * 초기화, 특별이 할 일은 없음 
@@ -126,6 +134,8 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
     	String username		= null;
     	String reply		= null;
     	String locale		= null;
+    	String fileName		= null;
+    	String file			= null;
     	
 		try {
 			// chatserver 접속 객체
@@ -138,6 +148,13 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 			username	= (String)json.get(USERNAME);
 			reply		= (String)json.get(REPLY);
 			locale		= (String)json.get(LOCALE);
+			fileName	= (String)json.get(FILENAME);
+			file		= (String)json.get(FILE);
+			try {
+				boolean flag = Util.base64ToFile(repos, fileName,file);
+			}catch(Exception e) {
+				
+			}
 			
 			MessageBroker msg		= null;
 			if(locale.equalsIgnoreCase(Locale.KOREAN.getLanguage())) {
@@ -175,7 +192,11 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 				}
 			}
 			// chatbot server에게 사용자 입력값을 전달하고 응답을 받음
+			System.out.println("request:");
+			System.out.println(json);
 			json = proxy.interact(json);
+			System.out.println("--------------------------------------");
+			System.out.println("reply:");
 			System.out.println(json.toJSONString());
 			
 		} catch (ParseException e) {

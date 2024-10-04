@@ -40,12 +40,11 @@ public class Proxy {
 	 * @throws Exception 
 	 */
 	public JSONObject interact(JSONObject json) throws Exception {
-		/*
+		
 		JSONParser parser = new JSONParser();
 		Map<String,String> map = new HashMap<String,String>();
 		map.put(contentType, applicationJson);
 		String str = Util.send(method, chatbotHost+portDelemiter+chatbotPort+urlDelemiter+ app, map,json.toJSONString());
-		System.out.println(str);
 		json = (JSONObject)parser.parse(str);
 		if(str.indexOf(httpErrorCode) > 0) {
 			throw new Exception("Server Internal Error");
