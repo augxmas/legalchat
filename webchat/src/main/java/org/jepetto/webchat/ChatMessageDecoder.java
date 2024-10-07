@@ -48,11 +48,21 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 	/**
 	 * chatbot server 주소
 	 */
-	private static final String host		= reader.getProperty("justia.chatbot.host");
+	private static final String chatbotHost		= reader.getProperty("justia.chatbot.host");
 	/**
 	 * chatbot server 접속할 수 있는 port 번호
 	 */
-	private static final String port		= reader.getProperty("justia.chatbot.port");
+	private static final String chatportPort		= reader.getProperty("justia.chatbot.port");
+	
+	/**
+	 * generator server 주소
+	 */
+	private static final String generatorHost		= reader.getProperty("justia.generator.host");
+	/**
+	 * generator server 접속할 수 있는 port 번호
+	 */
+	private static final String generatorPort		= reader.getProperty("justia.generator.port");
+	
 	
 	/**
 	 * response
@@ -138,8 +148,8 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
     	String file			= null;
     	
 		try {
-			// chatserver 접속 객체
-			Proxy proxy = new Proxy(method,host,port,app);
+			// 인공지능 chatbot, generator  접속 객체
+			Proxy proxy = null;
 			
 			// 고소장 응답 메세지
 			json		= (JSONObject)parser.parse(message);
@@ -151,7 +161,7 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 			fileName	= (String)json.get(FILENAME);
 			file		= (String)json.get(FILE);
 			try {
-				boolean flag = Util.base64ToFile(repos, fileName,file);
+				Util.base64ToFile(repos, fileName,file);
 			}catch(Exception e) {
 				
 			}
@@ -173,8 +183,13 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 			
 			JSONObject beliefState	= null;
 			Map<String,String> temp = new HashMap<String,String>();
-			
-			json.put(INPUT, reply);
+			// 마지막 질의는 
+			if( Integer.parseInt(index) < MessageBroker.questionSize + 1) {
+				json.put(INPUT, reply);
+				proxy = new Proxy(method,chatbotHost,chatportPort,app);
+			}else {
+				proxy = new Proxy(method,generatorHost,generatorPort,app);
+			}
 			while(iter.hasNext()) {
 				key				= (String)iter.next();
 				try {

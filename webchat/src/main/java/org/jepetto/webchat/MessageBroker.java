@@ -19,10 +19,10 @@ public class MessageBroker {
 	 */
 	private ResourceBundle msg = null;
 	
-	private PropertyReader reader					= PropertyReader.getInstance();
+	private static PropertyReader reader					= PropertyReader.getInstance();
 
 	// 질의 갯수
-	private final int questionSize					= Integer.parseInt(reader.getProperty("justia.questions.length"));	 
+	public static final int questionSize					= Integer.parseInt(reader.getProperty("justia.questions.length"));	 
 	private Map<Integer,String> indexes				= new java.util.LinkedHashMap<Integer, String>(questionSize);
 	
 	/**
@@ -95,8 +95,15 @@ public class MessageBroker {
 			master.put(inputKey, title);
 			master.put(agentStateKey, agentState);
 		}
-		
-		if(index >= 1 ) { 
+		else if(index >= 14 ) {
+			try {
+				for(int i = 0 ; i < index ; i++) {
+					beliefState.put(prev_actions[i], "%beliefState[" + i + "]%");
+				}			
+			}catch(Exception e) {
+				
+			}
+		}else { //(index >= 1 ) { 
 			
 			master.put(inputKey, title);
 			master.put(agentStateKey, agentState);

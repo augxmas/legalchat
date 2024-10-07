@@ -30,19 +30,7 @@ public class JustiaEndpoint {
 	public	static final String chatRoom	= "chatRoom";
 
 	static PropertyReader reader = PropertyReader.getInstance();
-	
-	/*
-	HomeProxy proxy = HomeProxy.getInstance();
-	Facade remote = proxy.getFacade();
-	HashMap<String, String> dummy = new HashMap<String, String>();
 
-	public static final String dataSource = reader.getProperty("moneyclub_mysql_datasource");
-	public static final String QUERY_FILE = reader.getProperty("moneyclub_query_file");
-	public static final String xpath = "//recordset/row";
-	public static final String saveMsgKey = "saveMsg";
-	public static final String getMsgKey = "getMsg";
-	public static final String roomTitle = "stock";
-	//*/
 
 	@OnOpen
 	public void open(Session session, EndpointConfig config, @PathParam("room-name") String roomName) {
