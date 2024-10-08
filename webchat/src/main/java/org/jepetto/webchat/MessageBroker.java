@@ -96,9 +96,10 @@ public class MessageBroker {
 			master.put(agentStateKey, agentState);
 		}
 		else if(index >= 14 ) {
+			//master.put(agentStateKey, agentState);
 			try {
 				for(int i = 0 ; i < index ; i++) {
-					beliefState.put(prev_actions[i], "%beliefState[" + i + "]%");
+					master.put(prev_actions[i], "%beliefState[" + i + "]%");
 				}			
 			}catch(Exception e) {
 				

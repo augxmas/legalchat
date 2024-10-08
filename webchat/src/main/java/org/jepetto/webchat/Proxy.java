@@ -14,8 +14,8 @@ import org.json.simple.parser.ParseException;
  */
 public class Proxy {
 
-	private String chatbotHost;
-	private String chatbotPort;
+	private String host;
+	private String port;
 	private String app;
 	private String method;
 	
@@ -26,11 +26,11 @@ public class Proxy {
 	//private static final String error			= "error";
 	private static final String httpErrorCode	= "500";
 	
-	public Proxy(String method, String chatbotHost, String chatbotPort, String app) {
-		this.method			= method;
-		this.chatbotHost	= chatbotHost;
-		this.chatbotPort	= chatbotPort;
-		this.app			= app;
+	public Proxy(String method, String host, String port, String app) {
+		this.method	= method;
+		this.host	= host;
+		this.port	= port;
+		this.app	= app;
 	}
 	
 	/**
@@ -44,8 +44,13 @@ public class Proxy {
 		JSONParser parser = new JSONParser();
 		Map<String,String> map = new HashMap<String,String>();
 		map.put(contentType, applicationJson);
-		String str = Util.send(method, chatbotHost+portDelemiter+chatbotPort+urlDelemiter+ app, map,json.toJSONString());
-		json = (JSONObject)parser.parse(str);
+		String str = Util.send(method, host+portDelemiter+port+urlDelemiter+ app, map,json.toJSONString());
+		try {
+			json = (JSONObject)parser.parse(str);
+		}catch(Exception e) {
+			json = new JSONObject();
+			json.put("msg", str);
+		}
 		if(str.indexOf(httpErrorCode) > 0) {
 			throw new Exception("Server Internal Error");
 		}

@@ -187,24 +187,44 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 			if( Integer.parseInt(index) < MessageBroker.questionSize + 1) {
 				json.put(INPUT, reply);
 				proxy = new Proxy(method,chatbotHost,chatportPort,app);
+				while(iter.hasNext()) {
+					key				= (String)iter.next();
+					try {
+						beliefState = (JSONObject)((JSONObject)json.get(MessageBroker.agentStateKey)).get(MessageBroker.beliefStateKey);
+						value		= (String)map.get(key);
+						temp.put(MessageBroker.prev_actions[Integer.parseInt(key)], value);
+						beliefState.clear();
+						beliefState.putAll(temp);
+					}catch(java.lang.NullPointerException e) {
+						//e.printStackTrace();
+					}catch(java.lang.ClassCastException e) {
+						//e.printStackTrace();
+					}catch(java.lang.NumberFormatException e) {
+						
+					}
+				}
+				
 			}else {
 				proxy = new Proxy(method,generatorHost,generatorPort,app);
-			}
-			while(iter.hasNext()) {
-				key				= (String)iter.next();
-				try {
-					beliefState = (JSONObject)((JSONObject)json.get(MessageBroker.agentStateKey)).get(MessageBroker.beliefStateKey);
-					value		= (String)map.get(key);
-					temp.put(MessageBroker.prev_actions[Integer.parseInt(key)], value);
-					beliefState.clear();
-					beliefState.putAll(temp);
-				}catch(java.lang.NullPointerException e) {
-					//e.printStackTrace();
-				}catch(java.lang.ClassCastException e) {
-					//e.printStackTrace();
-				}catch(java.lang.NumberFormatException e) {
-					
+				while(iter.hasNext()) {
+					key				= (String)iter.next();
+					try {
+						//beliefState = (JSONObject)((JSONObject)json.get(MessageBroker.agentStateKey)).get(MessageBroker.beliefStateKey);
+						value		= (String)map.get(key);
+						temp.put(MessageBroker.prev_actions[Integer.parseInt(key)], value);
+						json.clear();
+						json.putAll(temp);
+					}catch(java.lang.NullPointerException e) {
+						//e.printStackTrace();
+					}catch(java.lang.ClassCastException e) {
+						//e.printStackTrace();
+					}catch(java.lang.NumberFormatException e) {
+						
+					}catch(ArrayIndexOutOfBoundsException e) {
+						
+					}
 				}
+				
 			}
 			// chatbot server에게 사용자 입력값을 전달하고 응답을 받음
 			System.out.println("request:");
