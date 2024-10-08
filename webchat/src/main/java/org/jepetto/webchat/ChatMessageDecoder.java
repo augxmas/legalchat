@@ -31,12 +31,9 @@ import org.json.simple.parser.ParseException;
  */
 public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 
-	//private TextToPDFConverter converter = new TextToPDFConverter();
-	
 	private EndpointConfig config;
 	
 	private static PropertyReader reader	= PropertyReader.getInstance();
-	
 	
 	private static final String repos 		= reader.getProperty("justia.repository");		
 	
@@ -49,6 +46,7 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 	 * chatbot server 주소
 	 */
 	private static final String chatbotHost		= reader.getProperty("justia.chatbot.host");
+	
 	/**
 	 * chatbot server 접속할 수 있는 port 번호
 	 */
@@ -58,6 +56,7 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 	 * generator server 주소
 	 */
 	private static final String generatorHost		= reader.getProperty("justia.generator.host");
+	
 	/**
 	 * generator server 접속할 수 있는 port 번호
 	 */
@@ -227,10 +226,10 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 				
 			}
 			// chatbot server에게 사용자 입력값을 전달하고 응답을 받음
+			System.out.println("--------------------------------------");
 			System.out.println("request:");
 			System.out.println(json);
 			json = proxy.interact(json);
-			System.out.println("--------------------------------------");
 			System.out.println("reply:");
 			System.out.println(json.toJSONString());
 			
