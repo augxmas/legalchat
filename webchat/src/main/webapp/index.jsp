@@ -203,7 +203,8 @@
 			"index" 	: index.toString()	, 
 			"reply" 	: reply				,
 			// browser의 default 언어. 영/한으로 번환하면서 테스트
-			"locale"	: navigator.language
+			//"locale"	: navigator.language
+			"locale"	: "en"
 		}
 		//index++;
 		webSocket.send(JSON.stringify(talk));

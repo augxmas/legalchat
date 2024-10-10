@@ -33,14 +33,14 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 
 	private EndpointConfig config;
 	
-	private static PropertyReader reader	= PropertyReader.getInstance();
+	private static PropertyReader reader		= PropertyReader.getInstance();
 	
-	private static final String repos 		= reader.getProperty("justia.repository");		
+	private static final String repos 			= reader.getProperty("justia.repository");		
 	
 	/**
 	 * chatbot web server connection method = post
 	 */
-	private static final String method		= reader.getProperty("justia.chatbot.method");
+	private static final String method			= reader.getProperty("justia.chatbot.method");
 	
 	/**
 	 * chatbot server 주소
@@ -50,50 +50,52 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 	/**
 	 * chatbot server 접속할 수 있는 port 번호
 	 */
-	private static final String chatportPort		= reader.getProperty("justia.chatbot.port");
+	private static final String chatportPort	= reader.getProperty("justia.chatbot.port");
 	
 	/**
 	 * generator server 주소
 	 */
-	private static final String generatorHost		= reader.getProperty("justia.generator.host");
+	private static final String generatorHost	= reader.getProperty("justia.generator.host");
 	
 	/**
 	 * generator server 접속할 수 있는 port 번호
 	 */
-	private static final String generatorPort		= reader.getProperty("justia.generator.port");
+	private static final String generatorPort	= reader.getProperty("justia.generator.port");
 	
 	
 	/**
 	 * response
 	 */
-	private static final String app			= reader.getProperty("justia.chatbot.app");
+	private static final String app				= reader.getProperty("justia.chatbot.app");
 	
 	/**
 	 * pdf 전환 시, 편집 불가하도록 할 비밀번호
 	 */
-	private String password					= reader.getProperty("justia.pdf.password");
+	private String password						= reader.getProperty("justia.pdf.password");
 	
 	/**
 	 * 전환된 pdf 파일 저장 공간
 	 */
-	private String repository				= reader.getProperty("justia.repository");
+	private String repository					= reader.getProperty("justia.repository");
 	
-	private static final String encode 		= "UTF-8";
+	private static final String encode 			= "UTF-8";
 	
-	public static final String error		= "error";
+	public static final String error			= "error";
 	
-	public static final String INPUT		= "reply";
+	public static final String INPUT			= "reply";
 	
 	// 고소장 작성 응답 내용 키
-	public static final String INDEX		= "index";
-	public static final String MODE			= "mode";
-	public static final String USERNAME		= "username";
-	public static final String REPLY		= "reply";
-	public static final String LOCALE		= "locale";
+	public static final String INDEX			= "index";
+	public static final String MODE				= "mode";
+	public static final String USERNAME			= "username";
+	public static final String REPLY			= "reply";
+	public static final String LOCALE			= "locale";
 	
-	public static final String FILENAME		= "fileName";
+	public static final String FILENAME			= "fileName";
 	
-	public static final String FILE			= "file";
+	public static final String FILE				= "file";
+	
+	public static final String MSG				= "msg";
 		
 	/**
 	 * 초기화, 특별이 할 일은 없음 
@@ -182,15 +184,24 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 			
 			JSONObject beliefState	= null;
 			Map<String,String> temp = new HashMap<String,String>();
+			Factory factory = Factory.getInstance();
+			Translator translator = factory.getTranslator();
+			
 			// 마지막 질의는 
 			if( Integer.parseInt(index) < MessageBroker.questionSize + 1) {
-				json.put(INPUT, reply);
+				if(locale.equalsIgnoreCase(Translator.EN)) {
+					json.put(INPUT, translator.ko(reply));
+				}else {
+					json.put(INPUT, reply);
+				}
+				
 				proxy = new Proxy(method,chatbotHost,chatportPort,app);
 				while(iter.hasNext()) {
 					key				= (String)iter.next();
 					try {
 						beliefState = (JSONObject)((JSONObject)json.get(MessageBroker.agentStateKey)).get(MessageBroker.beliefStateKey);
 						value		= (String)map.get(key);
+						value		= translator.ko(value);
 						temp.put(MessageBroker.prev_actions[Integer.parseInt(key)], value);
 						beliefState.clear();
 						beliefState.putAll(temp);
@@ -228,8 +239,30 @@ public class ChatMessageDecoder implements Decoder.Text<JSONObject> {
 			// chatbot server에게 사용자 입력값을 전달하고 응답을 받음
 			System.out.println("--------------------------------------");
 			System.out.println("request:");
-			System.out.println(json);
-			json = proxy.interact(json);
+			
+			
+			if( Integer.parseInt(index) < MessageBroker.questionSize + 1) {
+				json = proxy.interact(json);				
+			} else {
+				if(locale.equalsIgnoreCase(Translator.EN)) {
+					Set keySet = json.keySet();
+					//Iterator iter = keySet.iterator();
+					iter = keySet.iterator();
+
+					while(iter.hasNext()) {
+						key = (String)iter.next();
+						value = (String)json.get(key);
+						value = translator.ko(value);
+						json.put(key, value);
+					}
+				}
+				System.out.println(json);
+				json = proxy.interact(json);	
+				message = (String)json.get(MSG);
+				message = translator.en(message);
+				json.put(MSG, message);
+			}			
+
 			System.out.println("reply:");
 			System.out.println(json.toJSONString());
 			
